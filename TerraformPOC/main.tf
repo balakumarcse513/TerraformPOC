@@ -45,32 +45,42 @@ resource "azurerm_app_service" "RG" {
   }
 }
 
-resource "azurerm_app_service_plan" "RG2" {
-  name                = "TerrafromASPlanJava"
-  location            = azurerm_resource_group.RG2.location
-  resource_group_name = azurerm_resource_group.RG2.name
 
-  sku {
-    tier = "Standard"
-    size = "S1"
+resource "azurerm_sql_server" "RG" {
+  name                         = "TerraformSqlserver"
+  resource_group_name          = azurerm_resource_group.RG.name
+  location                     = "South India"
+  version                      = "12.0"
+  administrator_login          = "testuser"
+  administrator_login_password = "TestUser@123"
+
+  tags = {
+    environment = "production"
   }
 }
 
-resource "azurerm_app_service" "RG2" {
-  name                = "TerraformAppJava"
-  location            = azurerm_resource_group.RG2.location
-  resource_group_name = azurerm_resource_group.RG2.name
-  app_service_plan_id = azurerm_app_service_plan.RG2.id
+resource "azurerm_sql_database" "RG" {
+  name                = "TerraformSqldatabase"
+  resource_group_name = azurerm_resource_group.RG.name
+  location            = "South India"
+  server_name         = azurerm_sql_server.RG.name
 
-  site_config {
-    java_version           = "1.8"
-    java_container         = "TOMCAT"
-    java_container_version = "9.0"
+  extended_auditing_policy {
+    storage_endpoint                        = azurerm_storage_account.RG.primary_blob_endpoint
+    storage_account_access_key              = azurerm_storage_account.RG.primary_access_key
+    storage_account_access_key_is_secondary = true
+    retention_in_days                       = 6
+  }
+
+
+
+  tags = {
+    environment = "Testing"
   }
 }
 
 resource "azurerm_key_vault" "RG" {
-  name                        = "TerraformKeyVault"
+  name                        = "Terraformkeyvault"
   location                    = azurerm_resource_group.RG.location
   resource_group_name         = azurerm_resource_group.RG.name
   enabled_for_disk_encryption = true
@@ -105,38 +115,5 @@ resource "azurerm_key_vault" "RG" {
 
   tags = {
     environment = "Testing"
-  }
-}
-
-resource "azurerm_sql_server" "RG" {
-  name                         = "TerraformSqlserver"
-  resource_group_name          = azurerm_resource_group.RG.name
-  location                     = "South India"
-  version                      = "12.0"
-  administrator_login          = "testuser"
-  administrator_login_password = "TestUser@123"
-
-  tags = {
-    environment = "production"
-  }
-}
-
-resource "azurerm_sql_database" "RG" {
-  name                = "TerraformSqldatabase"
-  resource_group_name = azurerm_resource_group.RG.name
-  location            = "South India"
-  server_name         = azurerm_sql_server.RG.name
-
-  extended_auditing_policy {
-    storage_endpoint                        = azurerm_storage_account.RG.primary_blob_endpoint
-    storage_account_access_key              = azurerm_storage_account.RG.primary_access_key
-    storage_account_access_key_is_secondary = true
-    retention_in_days                       = 6
-  }
-
-
-
-  tags = {
-    environment = "production"
   }
 }
