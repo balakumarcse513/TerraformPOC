@@ -33,4 +33,4 @@ resource "azurerm_app_service" "appservice" {
     java_container         = "TOMCAT"
     java_container_version = "9.0"
   }
-  
+} 
