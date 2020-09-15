@@ -45,10 +45,10 @@ resource "azurerm_app_service" "RG" {
   }
 }
 
-resource "azurerm_app_service_plan" "RG" {
+resource "azurerm_app_service_plan" "RG2" {
   name                = "TerrafromASPlanJava"
-  location            = azurerm_resource_group.RG.location
-  resource_group_name = azurerm_resource_group.RG.name
+  location            = azurerm_resource_group.RG2.location
+  resource_group_name = azurerm_resource_group.RG2.name
 
   sku {
     tier = "Standard"
@@ -56,11 +56,11 @@ resource "azurerm_app_service_plan" "RG" {
   }
 }
 
-resource "azurerm_app_service" "RG" {
+resource "azurerm_app_service" "RG2" {
   name                = "TerraformAppJava"
-  location            = azurerm_resource_group.RG.location
-  resource_group_name = azurerm_resource_group.RG.name
-  app_service_plan_id = azurerm_app_service_plan.Plan.id
+  location            = azurerm_resource_group.RG2.location
+  resource_group_name = azurerm_resource_group.RG2.name
+  app_service_plan_id = azurerm_app_service_plan.RG2.id
 
   site_config {
     java_version           = "1.8"
