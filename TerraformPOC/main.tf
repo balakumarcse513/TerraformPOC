@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "RG" {
   location = "South India"
 }
 
-resource "azurerm_app_service_plan" "Plan" {
+resource "azurerm_app_service_plan" "RG" {
   name                = "TerrafromAppServicePlan"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
@@ -22,15 +22,25 @@ resource "azurerm_app_service_plan" "Plan" {
   }
 }
 
-resource "azurerm_app_service" "appservice" {
+resource "azurerm_app_service" "RG" {
   name                = "TerraformAppService"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
-  app_service_plan_id = azurerm_app_service_plan.Plan.id
+  app_service_plan_id = azurerm_app_service_plan.RG.id
 
   site_config {
-    java_version           = "1.8"
-    java_container         = "TOMCAT"
-    java_container_version = "9.0"
+    dotnet_framework_version = "v4.0"
+    scm_type                 = "LocalGit"
   }
+
+   app_settings = {
+    "SOME_KEY" = "some-value"
+  }
+
+  connection_string {
+    name  = "Database"
+    type  = "SQLServer"
+    value = "Server=some-server.mydomain.com;Integrated Security=SSPI"
+  }
+
 } 
