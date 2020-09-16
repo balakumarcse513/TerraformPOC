@@ -1,8 +1,8 @@
 provider "azurerm" {
-  subscription_id = "9f33ccbb-95c4-487a-93d0-7272a2c8aa9b"
-  client_id       = "a3a63ec1-bdbc-4c82-887e-64fdb5feabfe"
-  client_secret   = "9~2~~UK__iHsd1G9pFu_21y-4GdBBQ1_81"
-  tenant_id       = "12eea0a8-4e55-4e73-b7fc-2a20054834a0"
+  subscription_id = "2f7ae9e5-d9f2-4c61-9ada-14eb2aadb0b4"
+  client_id       = "a4b9d474-e2f6-468f-a6e8-db9a344270e1"
+  client_secret   = "ZFab50v-Y719-~ApJQ-O6YT.RQ1oq6~AZL"
+  tenant_id       = "edf442f5-b994-4c86-a131-b42b03a16c95"
   version         = "=2.0.0"
   features {}
 }
@@ -15,7 +15,7 @@ resource "azurerm_resource_group" "RG" {
 
 # 2.AppServicePlan for DotNet
 resource "azurerm_app_service_plan" "Plan" {
-  name                = "TerraformASPlanDotnetNew"
+  name                = "TerraformASPlanDotnet"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
 
@@ -76,7 +76,7 @@ resource "azurerm_app_service" "appservice2" {
 
 # 4.Sql Server
 resource "azurerm_sql_server" "sqlserver" {
-  name                         = "terraformsqlservernew"
+  name                         = "terraformsqlserver"
   resource_group_name          = azurerm_resource_group.RG.name
   location                     = azurerm_resource_group.RG.location
   version                      = "12.0"
@@ -90,7 +90,7 @@ resource "azurerm_sql_server" "sqlserver" {
 
 # 5.Swl Database
 resource "azurerm_sql_database" "SqlDatabase" {
-  name                = "terraformsqldatabasenew"
+  name                = "terraformsqldatabase"
   resource_group_name = azurerm_resource_group.RG.name
   location            = azurerm_resource_group.RG.location
   server_name         = azurerm_sql_server.sqlserver.name
@@ -102,11 +102,11 @@ resource "azurerm_sql_database" "SqlDatabase" {
 
 # 5.KeyValut
 resource "azurerm_key_vault" "keyvault" {
-  name                        = "terraformkeyvaultnew"
+  name                        = "terraformkeyvault"
   location                    = azurerm_resource_group.RG.location
   resource_group_name         = azurerm_resource_group.RG.name
   enabled_for_disk_encryption = true
-  tenant_id                   = "12eea0a8-4e55-4e73-b7fc-2a20054834a0"
+  tenant_id                   = "edf442f5-b994-4c86-a131-b42b03a16c95"
   soft_delete_enabled         = true
   #soft_delete_retention_days  = 7
   purge_protection_enabled    = false
@@ -114,8 +114,8 @@ resource "azurerm_key_vault" "keyvault" {
   sku_name = "standard"
 
   access_policy {
-    tenant_id = "12eea0a8-4e55-4e73-b7fc-2a20054834a0"
-    object_id = "96367c5f-545d-484d-9285-f5b0ae653df8"
+    tenant_id = "edf442f5-b994-4c86-a131-b42b03a16c95"
+    object_id = "7bd66435-c50d-4689-9c27-95964bd64957"
 
     key_permissions = [
       "get",
