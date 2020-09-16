@@ -7,13 +7,15 @@ provider "azurerm" {
   features {}
 }
 
+# 1.ResourceGroup
 resource "azurerm_resource_group" "RG" {
-  name     = "TerraformRG"
-  location = "South India"
+  name     = "TerraformResourceGroup"
+  location = "West Europe"
 }
 
-resource "azurerm_app_service_plan" "RG" {
-  name                = "TerraformASPlanDotNet"
+# 2.AppServicePlan for DotNet
+resource "azurerm_app_service_plan" "Plan" {
+  name                = "TerraformASPlanDotnet"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
 
@@ -23,11 +25,12 @@ resource "azurerm_app_service_plan" "RG" {
   }
 }
 
-resource "azurerm_app_service" "RG" {
-  name                = "TerraformAppDotnet"
+# 2.AppService for DotNet
+resource "azurerm_app_service" "Appservice" {
+  name                = "TerraformappserviceDotnet"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
-  app_service_plan_id = azurerm_app_service_plan.RG.id
+  app_service_plan_id = azurerm_app_service_plan.Plan.id
 
   site_config {
     dotnet_framework_version = "v4.0"
@@ -45,37 +48,96 @@ resource "azurerm_app_service" "RG" {
   }
 }
 
+# 3.AppServicePlan for Java
+resource "azurerm_app_service_plan" "Plan2" {
+  name                = "TerraformASPlanJava"
+  location            = azurerm_resource_group.RG.location
+  resource_group_name = azurerm_resource_group.RG.name
 
-resource "azurerm_sql_server" "RG" {
-  name                         = "TerraformSqlserver"
+  sku {
+    tier = "Standard"
+    size = "S1"
+  }
+}
+
+#3.AppService for Java
+resource "azurerm_app_service" "appservice2" {
+  name                = "TerraformAppServiceJava"
+  location            = azurerm_resource_group.RG.location
+  resource_group_name = azurerm_resource_group.RG.name
+  app_service_plan_id = azurerm_app_service_plan.Plan2.id
+
+  site_config {
+    java_version           = "1.8"
+    java_container         = "TOMCAT"
+    java_container_version = "9.0"
+  }
+}
+
+# 4.Sql Server
+resource "azurerm_sql_server" "sqlserver" {
+  name                         = "terraformsqlserver"
   resource_group_name          = azurerm_resource_group.RG.name
-  location                     = "South India"
+  location                     = azurerm_resource_group.RG.location
   version                      = "12.0"
   administrator_login          = "testuser"
-  administrator_login_password = "TestUser@123"
+  administrator_login_password = "4-v3ry-53cr37-p455w0rd"
 
   tags = {
     environment = "production"
   }
 }
 
-resource "azurerm_sql_database" "RG" {
-  name                = "TerraformSqldatabase"
+# 5.Swl Database
+resource "azurerm_sql_database" "SqlDatabase" {
+  name                = "terraformsqldatabase"
   resource_group_name = azurerm_resource_group.RG.name
-  location            = "South India"
-  server_name         = azurerm_sql_server.RG.name
+  location            = azurerm_resource_group.RG.location
+  server_name         = azurerm_sql_server.sqlserver.name
 
-  extended_auditing_policy {
-    storage_endpoint                        = azurerm_storage_account.RG.primary_blob_endpoint
-    storage_account_access_key              = azurerm_storage_account.RG.primary_access_key
-    storage_account_access_key_is_secondary = true
-    retention_in_days                       = 6
+  tags = {
+    environment = "production"
+  }
+}
+
+# 5.KeyValut
+resource "azurerm_key_vault" "keyvault" {
+  name                        = "terraformkeyvault"
+  location                    = azurerm_resource_group.RG.location
+  resource_group_name         = azurerm_resource_group.RG.name
+  enabled_for_disk_encryption = true
+  tenant_id                   = "12eea0a8-4e55-4e73-b7fc-2a20054834a0"
+  soft_delete_enabled         = true
+  #soft_delete_retention_days  = 7
+  purge_protection_enabled    = false
+
+  sku_name = "standard"
+
+  access_policy {
+    tenant_id = "12eea0a8-4e55-4e73-b7fc-2a20054834a0"
+    object_id = "96367c5f-545d-484d-9285-f5b0ae653df8"
+
+    key_permissions = [
+      "get",
+    ]
+
+    secret_permissions = [
+      "get",
+    ]
+
+    storage_permissions = [
+      "get",
+    ]
   }
 
-
+  network_acls {
+    default_action = "Deny"
+    bypass         = "AzureServices"
+  }
 
   tags = {
     environment = "Testing"
   }
 }
+
 
