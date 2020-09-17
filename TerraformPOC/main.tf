@@ -9,13 +9,13 @@ provider "azurerm" {
 
 # 1.ResourceGroup
 resource "azurerm_resource_group" "RG" {
-  name     = "IBG-CCPNW-31365-POCResourceGroup"
+  name     = "tfresourcegroup"
   location = "West Europe"
 }
 
 # 2.AppServicePlan for DotNet
 resource "azurerm_app_service_plan" "Plan" {
-  name                = "IBG-CCPNW-31365-POCASPlanDotnet"
+  name                = "tfasplandotnet"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
 
@@ -27,7 +27,7 @@ resource "azurerm_app_service_plan" "Plan" {
 
 # 2.AppService for DotNet
 resource "azurerm_app_service" "Appservice" {
-  name                = "IBG-CCPNW-31365-POCappserviceDotnet"
+  name                = "tfappservicedotnet"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
   app_service_plan_id = azurerm_app_service_plan.Plan.id
@@ -50,7 +50,7 @@ resource "azurerm_app_service" "Appservice" {
 
 # 3.AppServicePlan for Java
 resource "azurerm_app_service_plan" "Plan2" {
-  name                = "IBG-CCPNW-31365-POCASPlanJava"
+  name                = "tfasplanjava"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
 
@@ -62,7 +62,7 @@ resource "azurerm_app_service_plan" "Plan2" {
 
 #3.AppService for Java
 resource "azurerm_app_service" "appservice2" {
-  name                = "IBG-CCPNW-31365-POCAppServiceJava"
+  name                = "tfappservicejava"
   location            = azurerm_resource_group.RG.location
   resource_group_name = azurerm_resource_group.RG.name
   app_service_plan_id = azurerm_app_service_plan.Plan2.id
@@ -76,7 +76,7 @@ resource "azurerm_app_service" "appservice2" {
 
 # 4.Sql Server
 resource "azurerm_sql_server" "sqlserver" {
-  name                         = "IBG-CCPNW-31365-POCsqlserver"
+  name                         = "tfsqlservernew"
   resource_group_name          = azurerm_resource_group.RG.name
   location                     = azurerm_resource_group.RG.location
   version                      = "12.0"
@@ -90,7 +90,7 @@ resource "azurerm_sql_server" "sqlserver" {
 
 # 5.Swl Database
 resource "azurerm_sql_database" "SqlDatabase" {
-  name                = "IBG-CCPNW-31365-POCsqldatabase"
+  name                = "tfsqldatabasenew"
   resource_group_name = azurerm_resource_group.RG.name
   location            = azurerm_resource_group.RG.location
   server_name         = azurerm_sql_server.sqlserver.name
@@ -102,7 +102,7 @@ resource "azurerm_sql_database" "SqlDatabase" {
 
 # 5.KeyValut
 resource "azurerm_key_vault" "keyvault" {
-  name                        = "IBG-CCPNW-31365-POCkeyvault"
+  name                        = "tfkeyvaultnew"
   location                    = azurerm_resource_group.RG.location
   resource_group_name         = azurerm_resource_group.RG.name
   enabled_for_disk_encryption = true
